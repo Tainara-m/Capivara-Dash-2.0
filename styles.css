@@ -42,6 +42,11 @@ option {
   font-family: inherit;
 }
 
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ===== TELA DE INÍCIO ===== */
 #start-screen {
   display: flex;

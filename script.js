@@ -27,6 +27,7 @@ let velocidadeCapivara = 8;
 let velocidadeItens = 1;
 let leftPressed = false;
 let rightPressed = false;
+const ARROW_MOVE_FACTOR = 0.72;
 
 let comidaInterval, ovoInterval, vidaInterval, chaveInterval;
 let toastTimer = null;
@@ -126,8 +127,9 @@ function draw() {
   desenharEfeitoFase();
 
   if (!jogoPausado) {
-    if (leftPressed)  capivaraX = max(0, capivaraX - velocidadeCapivara);
-    if (rightPressed) capivaraX = min(width - CHARACTER_SIZE, capivaraX + velocidadeCapivara);
+    const movimento = floor(velocidadeCapivara * ARROW_MOVE_FACTOR);
+    if (leftPressed)  capivaraX = max(0, capivaraX - movimento);
+    if (rightPressed) capivaraX = min(width - CHARACTER_SIZE, capivaraX + movimento);
   }
 
   desenharItens();
@@ -457,16 +459,16 @@ function setText(id, value) {
 }
 
 function keyPressed() {
-  if (keyCode === LEFT_ARROW)  leftPressed = true;
-  if (keyCode === RIGHT_ARROW) rightPressed = true;
+  if (keyCode === LEFT_ARROW || key === 'a' || key === 'A')  leftPressed = true;
+  if (keyCode === RIGHT_ARROW || key === 'd' || key === 'D') rightPressed = true;
   if (key === 'p' || key === 'P') togglePause();
   if (key === 'm' || key === 'M') toggleMute();
   if (key === 'n' || key === 'N') proximaMusica();
 }
 
 function keyReleased() {
-  if (keyCode === LEFT_ARROW)  leftPressed = false;
-  if (keyCode === RIGHT_ARROW) rightPressed = false;
+  if (keyCode === LEFT_ARROW || key === 'a' || key === 'A')  leftPressed = false;
+  if (keyCode === RIGHT_ARROW || key === 'd' || key === 'D') rightPressed = false;
 }
 
 function touchStarted() {
@@ -475,6 +477,25 @@ function touchStarted() {
 }
 
 function touchEnded() { return false; }
+
+function ensureAudioStarted() {
+  if (typeof window !== 'undefined') {
+    if (typeof window.userStartAudio === 'function') {
+      try {
+        window.userStartAudio();
+      } catch (e) {
+        // Ignore audio activation failures on restricted browsers.
+      }
+    } else if (typeof getAudioContext === 'function') {
+      try {
+        const ctx = getAudioContext();
+        if (ctx && ctx.state === 'suspended') ctx.resume();
+      } catch (e) {
+        // Ignore errors when audio context is unavailable.
+      }
+    }
+  }
+}
 
 function toggleMute() {
   somMutado = !somMutado;
@@ -568,7 +589,7 @@ function togglePause() {
 }
 
 function startGame() {
-  userStartAudio();
+  ensureAudioStarted();
   document.body.classList.remove('inicio');
   document.body.classList.add('jogo');
   document.getElementById('start-screen').style.display = 'none';
