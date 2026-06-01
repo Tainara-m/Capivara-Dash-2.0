@@ -13,7 +13,7 @@ Ao longo da partida, a dificuldade aumenta gradualmente, exigindo mais reflexos 
 | Item | Efeito |
 |--------|--------|
 | 🌿 Capim | +10 pontos |
-| 🥚 Ovo | Perde 1 vida |
+| 🪨 Pedra | Perde 1 vida |
 | ❤️ Coração | Recupera 1 vida |
 | 🔑 Chave (após fase 5) | Permite reviver uma vez |
 
